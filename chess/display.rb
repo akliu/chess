@@ -11,7 +11,7 @@ class Display
     @selected = false
   end
 
-  # def render 
+  # def render
   #   row_numbers = (1..8).to_a.reverse
   #   puts  "   a  b  c  d  e  f  g  h"
   #   board.grid.each_with_index do |row, idx|
@@ -44,7 +44,10 @@ class Display
       else
         bg = :green
       end
-      { background: bg, color: :white }
+
+      piece_color = @board.grid[i][j].color
+
+      { background: bg, color: piece_color}
   end
 
   def render

@@ -42,6 +42,7 @@ class Game
 
   def move(start_pos, end_pos)
     board.move(start_pos, end_pos)
+    
   end
 end
 
