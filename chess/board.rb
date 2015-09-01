@@ -11,6 +11,7 @@ class Board
     @grid[0][0] = Rook.new([0,0],self)
     @grid[0][1] = Queen.new([0,1],self)
     @grid[0][2] = Bishop.new([0,2],self)
+    @grid[0][3] = King.new([0,3],self)
   end
 
   def move(start, end_pos)
