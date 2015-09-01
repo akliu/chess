@@ -1,39 +1,64 @@
 require './board.rb'
 require './player.rb'
+require 'byebug'
 
 class Game
-  attr_reader :board, :display, :player
+  attr_reader :board, :display, :player1, :player2, :current_player
 
   def initialize
     @board = Board.new
-
     @display = Display.new(@board)
-    @player = Player.new("Test", @display, @board)
-  end
+    @player1 = Player.new("Player 1", @display, @board, :white)
+    @player2 = Player.new("Player 2", @display, @board, :black)
+    @current_player  = player1
+   end
 
   def run
-    while true
+    until board.checkmate?(current_player.color)
       begin
-        @display.render
-        start_pos = @player.get_move
-        end_pos = @player.get_move
-        move(start_pos, end_pos) if valid_move?(start_pos, end_pos)
+        take_turn(current_player)
 
+        switch_player
+
+        p board.checkmate?(current_player.color)
       rescue InvalidMoveError => e
         puts e.message
         sleep(3)
         retry
       end
-      #p valid_move?(start_pos, end_pos)
-
     end
+    puts "game over!"
   end
 
+  def switch_player
+    (current_player == player1) ?
+      @current_player = player2 : @current_player = player1
+  end
+
+  def take_turn(player)
+    display.render
+    print current_player.name
+    puts "'s turn!"
+
+    begin
+      start_pos = player.get_move
+      if (board.get_piece(start_pos).color != player.color)
+        raise InvalidMoveError.new("Not your piece!")
+      end
+    rescue InvalidMoveError => e
+      puts e.message
+      sleep(1)
+      retry
+    end
+
+    end_pos = player.get_move
+    move(start_pos, end_pos) if valid_move?(start_pos, end_pos)
+  end
 
 
   def valid_move?(start_pos, end_pos)
     current_piece = board.get_piece(start_pos)
-    p current_piece.moves
+
     if !current_piece.moves.include?(end_pos)
       raise InvalidMoveError.new("Can't move there")
     end
@@ -42,7 +67,6 @@ class Game
 
   def move(start_pos, end_pos)
     board.move(start_pos, end_pos)
-    
   end
 end
 

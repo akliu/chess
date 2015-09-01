@@ -4,48 +4,41 @@ require './display.rb'
 class Board
   attr_reader :grid
 
-  def initialize
+  def initialize(setup = true)
     @grid = Array.new(8) {Array.new(8)}
-
-    populate_board #initiate white and black pieces
-    # @grid[0][0] = Rook.new([0,0],self, :black)
-    # @grid[0][1] = Queen.new([0,1],self, :black)
-    # @grid[0][2] = Bishop.new([0,2],self, :black)
-    # @grid[0][3] = King.new([0,3],self, :black)
-    # @grid[0][4] = Knight.new([0,4],self, :black)
-    # @grid[0][5] = Pawn.new([0,5],self, :black, false)
-    # @grid[7][3] = Pawn.new([7,3],self,:white, false)
+    populate_board if setup
   end
 
   def move(start, end_pos)
-    x_start,y_start = start
+    x_start, y_start = start
     x_end, y_end = end_pos
     piece = get_piece(start)
 
+    # Delegate to piece class
     piece.moved = true if piece.is_a?(Pawn)
 
     grid[x_end][y_end] = piece
     piece.update_pos(end_pos)
-    grid[x_start][y_start] = Empty_Piece.new
+    grid[x_start][y_start] = EmptyPiece.new
   end
 
   def occupied?(pos)
-    p pos
-    x,y = pos
+    x, y = pos
+    # Duck type use .empty?
     return true if grid[x][y].is_a?(Piece)
     false
   end
 
+  #Rename to []
   def get_piece(pos)
     x,y = pos
     return grid[x][y]
   end
 
   def populate_board
-
     grid.length.times do |row_idx|
       grid.length.times do |col_idx|
-        grid[row_idx][col_idx] = Empty_Piece.new()
+        grid[row_idx][col_idx] = EmptyPiece.new()
       end
     end
     grid[0] = generate_start_row(:black)
@@ -84,7 +77,7 @@ class Board
     row << Bishop.new([row_idx,5], self, color)
     row << Knight.new([row_idx,6], self, color)
     row << Rook.new([row_idx,7], self, color)
-    p row
+
     row
   end
 
@@ -92,6 +85,69 @@ class Board
     pos.all? { |coord| (0..7).include?(coord)}
   end
 
+  def get_king_position(color)
+    grid.each_with_index do |row, row_idx|
+      row.each_with_index do |piece, col_idx|
+        # Use duck typing
+        if piece.is_a?(King) && piece.color == color
+          return [row_idx,col_idx]
+        end
+      end
+    end
+    raise "error no king found"
+  end
+
+  def get_all_pieces(color)
+    pieces = []
+    grid.each_with_index do |row, row_idx|
+      row.each_with_index do |piece, col_idx|
+        if piece.color == color
+          pieces << piece
+        end
+      end
+    end
+    pieces
+  end
+
+  def in_check?(color)
+    threaten_positions =  []
+    king_position = get_king_position(color)
+    opponent_color = (color == :black) ? :white : :black
+
+    get_all_pieces(opponent_color).each do |piece|
+      threaten_positions += piece.moves
+    end
+    # Condense into one line
+    return true if threaten_positions.include?(king_position)
+    false
+  end
+
+  def checkmate?(color) #call this method when in_check is true
+    #get all pieces of color and iterate over each piece's move
+      #deep dup board and pieces with piece moved
+      #check if color is still in check
+    #end
+    #return true if in_check is true for all possible moves
+    get_all_pieces(color).each do |piece|
+      piece.moves.each do |move|
+        check_board = self.dup
+        return false unless check_board.in_check?(color)
+      end
+    end
+    true
+  end
+
+  def self.dup
+    new_board = Board.new(false)
+    grid.length.times do |row_idx|
+      grid.length.times do |col_idx|
+          current_piece = get_piece([row_idx, col_idx])
+          new_piece = current_piece.dup(new_board)
+          new_board.grid[row_idx][col_idx] = new_piece
+      end
+    end
+    new_board
+  end
 end
 
 if $PROGRAM_NAME == __FILE__
