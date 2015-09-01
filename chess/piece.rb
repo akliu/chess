@@ -45,7 +45,6 @@ end
 class SteppingPiece < Piece
   def moves
     possible_moves = []
-    possible_moves = []
     x_cur, y_cur = position
     move_dirs.each do |vector|
       x_next = vector[0] + x_cur
@@ -53,7 +52,7 @@ class SteppingPiece < Piece
       possible_pos = [x_next, y_next]
       possible_moves << possible_pos if board.in_bounds?(possible_pos)
     end
-
+    possible_moves
   end
 end
 
