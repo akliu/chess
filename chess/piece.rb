@@ -17,7 +17,7 @@ class Piece
 
   def dup(new_board)
     new_position = position.dup
-    self.class.new(new_position, new_board, color, moved)
+    self.class.new(new_position, new_board, color, @moved)
   end
 
 end
@@ -31,9 +31,16 @@ class EmptyPiece
     @color = :blue
   end
 
+  def dup(board)
+    EmptyPiece.new
+  end
 end
 
 class SlidingPiece < Piece
+  def initialize(position, board, color, moved = false)
+    super
+  end
+
   def moves
     possible_moves = []
     x_cur, y_cur = position

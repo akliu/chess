@@ -131,13 +131,15 @@ class Board
     get_all_pieces(color).each do |piece|
       piece.moves.each do |move|
         check_board = self.dup
+      #  debugger
+        check_board.move(piece.position, move)
         return false unless check_board.in_check?(color)
       end
     end
     true
   end
 
-  def self.dup
+  def dup
     new_board = Board.new(false)
     grid.length.times do |row_idx|
       grid.length.times do |col_idx|

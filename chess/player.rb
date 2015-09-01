@@ -18,7 +18,9 @@ class Player
     #  move = nil unless valid_piece?(move)
       display.render
       print name
-      puts color.to_s
+      puts "'s turn!"
+      puts
+      puts "In check!" if board.in_check?(color)
       #end_pos = display.get_input
       #move = [start_pos, end_pos]
     end

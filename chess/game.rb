@@ -20,7 +20,7 @@ class Game
 
         switch_player
 
-        p board.checkmate?(current_player.color)
+
       rescue InvalidMoveError => e
         puts e.message
         sleep(3)
@@ -39,6 +39,8 @@ class Game
     display.render
     print current_player.name
     puts "'s turn!"
+    puts
+    puts "In check!" if board.in_check?(current_player.color)
 
     begin
       start_pos = player.get_move
@@ -59,9 +61,28 @@ class Game
   def valid_move?(start_pos, end_pos)
     current_piece = board.get_piece(start_pos)
 
-    if !current_piece.moves.include?(end_pos)
+    # get current_piece.moves if in_check? remove moves that still result
+    #in_check
+    #if result of above is [], raise moves error and end game
+
+    allowable_moves = current_piece.moves
+
+    if !allowable_moves.include?(end_pos)
       raise InvalidMoveError.new("Can't move there")
     end
+
+    current_piece.moves.each do |move|
+      check_board = board.dup
+      check_board.move(current_piece.position, move)
+      if check_board.in_check?(current_piece.color)
+        allowable_moves.delete(move)
+      end
+    end
+
+    if !allowable_moves.include?(end_pos)
+      raise InvalidMoveError.new("Still in check!")
+    end
+
     true
   end
 
