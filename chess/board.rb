@@ -122,16 +122,10 @@ class Board
     false
   end
 
-  def checkmate?(color) #call this method when in_check is true
-    #get all pieces of color and iterate over each piece's move
-      #deep dup board and pieces with piece moved
-      #check if color is still in check
-    #end
-    #return true if in_check is true for all possible moves
+  def checkmate?(color)
     get_all_pieces(color).each do |piece|
       piece.moves.each do |move|
         check_board = self.dup
-      #  debugger
         check_board.move(piece.position, move)
         return false unless check_board.in_check?(color)
       end
@@ -150,6 +144,21 @@ class Board
     end
     new_board
   end
+
+  def get_out_of_check(current_piece)
+    allowable_moves = current_piece.moves
+
+    current_piece.moves.each do |move|
+      check_board = self.dup
+      check_board.move(current_piece.position, move)
+      if check_board.in_check?(current_piece.color)
+        allowable_moves.delete(move)
+      end
+    end
+
+    allowable_moves
+  end
+
 end
 
 if $PROGRAM_NAME == __FILE__

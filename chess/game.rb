@@ -59,6 +59,7 @@ class Game
   end
 
 
+
   def valid_move?(start_pos, end_pos)
     current_piece = board.get_piece(start_pos)
 
@@ -72,13 +73,14 @@ class Game
       raise InvalidMoveError.new("Can't move there")
     end
 
-    current_piece.moves.each do |move|
-      check_board = board.dup
-      check_board.move(current_piece.position, move)
-      if check_board.in_check?(current_piece.color)
-        allowable_moves.delete(move)
-      end
-    end
+    allowable_moves = board.get_out_of_check(current_piece)
+    # current_piece.moves.each do |move|
+    #   check_board = board.dup
+    #   check_board.move(current_piece.position, move)
+    #   if check_board.in_check?(current_piece.color)
+    #     allowable_moves.delete(move)
+    #   end
+    # end
 
     if !allowable_moves.include?(end_pos)
       raise InvalidMoveError.new("Still in check!")

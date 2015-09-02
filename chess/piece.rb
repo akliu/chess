@@ -20,6 +20,8 @@ class Piece
     self.class.new(new_position, new_board, color, @moved)
   end
 
+
+
 end
 
 
