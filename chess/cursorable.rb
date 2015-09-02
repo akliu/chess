@@ -41,13 +41,23 @@ module Cursorable
     when :ctrl_c
       exit 0
     when :return, :space
-      @selected = !@selected
+  #    @selected = !@selected
+      selected_logic
       @cursor_pos
     when :left, :right, :up, :down
       update_pos(MOVES[key])
       nil
     else
       puts key
+    end
+  end
+
+  def selected_logic
+  
+    if @selected.nil?
+      @selected = @cursor_pos
+    else
+      @selected = nil
     end
   end
 

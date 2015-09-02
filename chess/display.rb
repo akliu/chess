@@ -8,7 +8,12 @@ class Display
   def initialize(board)
     @board = board
     @cursor_pos = [0,1]
-    @selected = false
+    #@selected = false
+    @selected = nil
+  end
+
+  def reset_selected
+    @selected = nil
   end
 
   # def render
@@ -37,13 +42,19 @@ class Display
   end
 
   def colors_for(i, j)
+    #board.get_piece([i,j]).selected
       if [i, j] == @cursor_pos
-        @selected ? bg = :light_red : bg = :yellow
+        #@selected ? bg = :light_red : bg = :yellow
+        bg = :yellow
+      elsif [i, j] == @selected #&& board.grid[i][j].is_a?(Piece)
+        bg = :light_red
       elsif (i + j).odd?
         bg = :light_blue
       else
         bg = :green
       end
+
+      #if piece.selected? bg = :purple
 
       piece_color = @board.grid[i][j].color
 

@@ -48,6 +48,7 @@ class Game
         raise InvalidMoveError.new("Not your piece!")
       end
     rescue InvalidMoveError => e
+      display.reset_selected
       puts e.message
       sleep(1)
       retry
