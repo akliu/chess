@@ -109,7 +109,15 @@ class Pawn < Piece
 
   def initialize(position, board, color, moved = false)
     super(position , board, color, moved)
-    @value = " P "
+
+    piece_code = ""
+    if color == :white
+      piece_code = "\u2659".encode('utf-8')
+    else
+      piece_code = "\u265F".encode('utf-8')
+    end
+
+    @value = " #{piece_code} "
   end
 
   def moves
@@ -160,7 +168,15 @@ end
 class King < SteppingPiece
   def initialize(position, board, color, moved = false)
     super(position , board, color, moved)
-    @value = " K "
+
+    piece_code = ""
+    if color == :white
+      piece_code = "\u2654".encode('utf-8')
+    else
+      piece_code = "\u265A".encode('utf-8')
+    end
+
+    @value = " #{piece_code} "
   end
 
   #Refactor into class constant
@@ -172,7 +188,15 @@ end
 class Knight < SteppingPiece
   def initialize(position, board, color, moved = false)
     super(position , board, color, moved)
-    @value = " N "
+
+    piece_code = ""
+    if color == :white
+      piece_code = "\u2658".encode('utf-8')
+    else
+      piece_code = "\u265E".encode('utf-8')
+    end
+
+    @value = " #{piece_code} "
   end
 
   #Refactor into class constant
@@ -184,7 +208,15 @@ end
 class Rook < SlidingPiece
   def initialize(position, board, color, moved = false)
     super(position , board, color, moved)
-    @value = " R "
+
+    piece_code = ""
+    if color == :white
+      piece_code = "\u2656".encode('utf-8')
+    else
+      piece_code = "\u265C".encode('utf-8')
+    end
+
+    @value = " #{piece_code} "
   end
 
   #Refactor into class constant
@@ -197,7 +229,15 @@ end
 class Bishop < SlidingPiece
   def initialize(position, board, color, moved = false)
     super(position , board, color, moved)
-    @value = " B "
+
+    piece_code = ""
+    if color == :white
+      piece_code = "\u2657".encode('utf-8')
+    else
+      piece_code = "\u265D".encode('utf-8')
+    end
+
+    @value = " #{piece_code} "
   end
 
   #Refactor into class constant
@@ -209,7 +249,15 @@ end
 class Queen < SlidingPiece
   def initialize(position, board, color, moved = false)
     super(position , board, color)
-    @value = " Q "
+
+    piece_code = ""
+    if color == :white
+      piece_code = "\u2655".encode('utf-8')
+    else
+      piece_code = "\u265B".encode('utf-8')
+    end
+
+    @value = " #{piece_code} "
   end
 
   #Refactor into class constant
