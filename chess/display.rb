@@ -8,25 +8,12 @@ class Display
   def initialize(board)
     @board = board
     @cursor_pos = [0,1]
-    #@selected = false
     @selected = nil
   end
 
   def reset_selected
     @selected = nil
   end
-
-  # def render
-  #   row_numbers = (1..8).to_a.reverse
-  #   puts  "   a  b  c  d  e  f  g  h"
-  #   board.grid.each_with_index do |row, idx|
-  #     print "#{row_numbers[idx]}  "
-  #     row.each {|piece| print "#{piece.value}  " }
-  #     print "#{row_numbers[idx]}"
-  #     puts
-  #   end
-  #   puts "   a  b  c  d  e  f  g  h"
-  # end
 
   def build_grid
     @board.grid.each.map.with_index do |row , x|
@@ -42,26 +29,22 @@ class Display
   end
 
   def colors_for(i, j)
-    #board.get_piece([i,j]).selected
     highlight_coords = []
     if @selected
       highlight_coords = board.get_out_of_check(board.get_piece(@selected))
     end
 
       if [i, j] == @cursor_pos
-        #@selected ? bg = :light_red : bg = :yellow
         bg = :yellow
       elsif highlight_coords.include?([i,j])
         bg = :magenta
-      elsif [i, j] == @selected #&& board.grid[i][j].is_a?(Piece)
+      elsif [i, j] == @selected
         bg = :light_red
       elsif (i + j).odd?
         bg = :light_blue
       else
         bg = :green
       end
-
-      #if piece.selected? bg = :purple
 
       piece_color = @board.grid[i][j].color
 
@@ -78,6 +61,4 @@ class Display
     end
     puts  "   a  b  c  d  e  f  g  h"
   end
-
-
 end

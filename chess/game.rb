@@ -17,17 +17,14 @@ class Game
     until board.checkmate?(current_player.color)
       begin
         take_turn(current_player)
-
         switch_player
-
-
       rescue InvalidMoveError => e
         puts e.message
         sleep(3)
         retry
       end
     end
-    puts "game over!"
+    puts "Game Over!"
   end
 
   def switch_player
@@ -62,28 +59,16 @@ class Game
 
   def valid_move?(start_pos, end_pos)
     current_piece = board.get_piece(start_pos)
-
-    # get current_piece.moves if in_check? remove moves that still result
-    #in_check
-    #if result of above is [], raise moves error and end game
-
     allowable_moves = current_piece.moves
 
     if !allowable_moves.include?(end_pos)
-      raise InvalidMoveError.new("Can't move there")
+      raise InvalidMoveError.new("This piece can't move there!")
     end
 
     allowable_moves = board.get_out_of_check(current_piece)
-    # current_piece.moves.each do |move|
-    #   check_board = board.dup
-    #   check_board.move(current_piece.position, move)
-    #   if check_board.in_check?(current_piece.color)
-    #     allowable_moves.delete(move)
-    #   end
-    # end
 
     if !allowable_moves.include?(end_pos)
-      raise InvalidMoveError.new("Still in check!")
+      raise InvalidMoveError.new("Still in check here!")
     end
 
     true
@@ -96,8 +81,6 @@ end
 
 class InvalidMoveError < StandardError
 end
-
-
 
 if $PROGRAM_NAME == __FILE__
   g = Game.new

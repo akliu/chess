@@ -14,7 +14,6 @@ class Board
     x_end, y_end = end_pos
     piece = get_piece(start)
 
-    # Delegate to piece class
     piece.moved = true if piece.is_a?(Pawn)
 
     grid[x_end][y_end] = piece
@@ -24,12 +23,9 @@ class Board
 
   def occupied?(pos)
     x, y = pos
-    # Duck type use .empty?
-    return true if grid[x][y].is_a?(Piece)
-    false
+    grid[x][y].is_a?(Piece)
   end
 
-  #Rename to []
   def get_piece(pos)
     x,y = pos
     return grid[x][y]
@@ -88,7 +84,6 @@ class Board
   def get_king_position(color)
     grid.each_with_index do |row, row_idx|
       row.each_with_index do |piece, col_idx|
-        # Use duck typing
         if piece.is_a?(King) && piece.color == color
           return [row_idx,col_idx]
         end
@@ -117,9 +112,8 @@ class Board
     get_all_pieces(opponent_color).each do |piece|
       threaten_positions += piece.moves
     end
-    # Condense into one line
-    return true if threaten_positions.include?(king_position)
-    false
+
+    threaten_positions.include?(king_position)
   end
 
   def checkmate?(color)
@@ -158,14 +152,4 @@ class Board
 
     allowable_moves
   end
-
-end
-
-if $PROGRAM_NAME == __FILE__
-  b = Board.new
-  d = Display.new(b)
-  d.render
-  sleep(5)
-  b.move([0,0], [7,7])
-  d.render
 end
